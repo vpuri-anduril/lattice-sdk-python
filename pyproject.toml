@@ -1,0 +1,40 @@
+[project]
+name = "anduril-lattice-sdk"
+dynamic = [
+  "version",
+]
+dependencies = [
+  "betterproto>=2.0.0b7",
+  "grpcio",
+  "grpclib",
+  "protobuf"
+]
+license = {file = "LICENSE.md"}
+requires-python = ">=3.8"
+authors = [
+  {name = "Anduril Industries Inc."},
+]
+maintainers = [
+  {name = "Anduril Industries Inc."}
+]
+description = "Anduril Lattice SDK in Python"
+readme = "README.md"
+keywords = ["anduril", "lattice", "sdk"]
+
+[project.urls]
+Homepage = "https://anduril.com"
+Documentation = "https://docs.anduril.com"
+Repository = "https://github.com/anduril/lattice-sdk-python"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/anduril"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ['.github']
