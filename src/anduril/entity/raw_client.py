@@ -54,11 +54,11 @@ from ..types.visual_details import VisualDetails
 OMIT = typing.cast(typing.Any, ...)
 
 
-class RawEntitiesClient:
+class RawEntityClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def publish_entity(
+    def publish_entity_rest(
         self,
         *,
         entity_id: typing.Optional[str] = OMIT,
@@ -242,7 +242,7 @@ class RawEntitiesClient:
             The request was valid and accepted.
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/entities",
+            "entities",
             method="PUT",
             json={
                 "entityId": entity_id,
@@ -377,7 +377,7 @@ class RawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def get_entity(
+    def get_entity_by_id(
         self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[Entity]:
         """
@@ -395,7 +395,7 @@ class RawEntitiesClient:
             Entity retrieval was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}",
+            f"entities/{jsonable_encoder(entity_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -447,7 +447,7 @@ class RawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def override_entity(
+    def put_entity_override_rest(
         self,
         entity_id: str,
         field_path: str,
@@ -468,7 +468,7 @@ class RawEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to override
+            ID of the entity to override
 
         field_path : str
             fieldPath to override
@@ -489,7 +489,7 @@ class RawEntitiesClient:
             The Entities API accepts the override.
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
+            f"entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
             method="PUT",
             json={
                 "entity": convert_and_respect_annotation_metadata(object_=entity, annotation=Entity, direction="write"),
@@ -551,7 +551,7 @@ class RawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def remove_entity_override(
+    def remove_entity_override_rest(
         self, entity_id: str, field_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[Entity]:
         """
@@ -560,10 +560,10 @@ class RawEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to undo an override from.
+            ID of the entity to undo an override from
 
         field_path : str
-            The fieldPath to clear overrides from.
+            fieldPath to clear overrides from
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -571,10 +571,10 @@ class RawEntitiesClient:
         Returns
         -------
         HttpResponse[Entity]
-            The removal of entity override was successful.
+            Removal of entity override was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
+            f"entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
             method="DELETE",
             request_options=request_options,
         )
@@ -634,7 +634,7 @@ class RawEntitiesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[EntityEventResponse]:
         """
-        This is a long polling API that will first return all pre-existing data and then return all new data as
+        This is a long polling API that will first return all preexisting data and then return all new data as
         it becomes available. If you want to start a new polling session then open a request with an empty
         'sessionToken' in the request body. The server will return a new session token in the response.
         If you want to retrieve the next batch of results from an existing polling session then send the session
@@ -661,7 +661,7 @@ class RawEntitiesClient:
             Entity event batch retrieval was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/entities/events",
+            "entities/events",
             method="POST",
             json={
                 "sessionToken": session_token,
@@ -744,11 +744,11 @@ class RawEntitiesClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
 
-class AsyncRawEntitiesClient:
+class AsyncRawEntityClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def publish_entity(
+    async def publish_entity_rest(
         self,
         *,
         entity_id: typing.Optional[str] = OMIT,
@@ -932,7 +932,7 @@ class AsyncRawEntitiesClient:
             The request was valid and accepted.
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/entities",
+            "entities",
             method="PUT",
             json={
                 "entityId": entity_id,
@@ -1067,7 +1067,7 @@ class AsyncRawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def get_entity(
+    async def get_entity_by_id(
         self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[Entity]:
         """
@@ -1085,7 +1085,7 @@ class AsyncRawEntitiesClient:
             Entity retrieval was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}",
+            f"entities/{jsonable_encoder(entity_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -1137,7 +1137,7 @@ class AsyncRawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def override_entity(
+    async def put_entity_override_rest(
         self,
         entity_id: str,
         field_path: str,
@@ -1158,7 +1158,7 @@ class AsyncRawEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to override
+            ID of the entity to override
 
         field_path : str
             fieldPath to override
@@ -1179,7 +1179,7 @@ class AsyncRawEntitiesClient:
             The Entities API accepts the override.
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
+            f"entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
             method="PUT",
             json={
                 "entity": convert_and_respect_annotation_metadata(object_=entity, annotation=Entity, direction="write"),
@@ -1241,7 +1241,7 @@ class AsyncRawEntitiesClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def remove_entity_override(
+    async def remove_entity_override_rest(
         self, entity_id: str, field_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[Entity]:
         """
@@ -1250,10 +1250,10 @@ class AsyncRawEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to undo an override from.
+            ID of the entity to undo an override from
 
         field_path : str
-            The fieldPath to clear overrides from.
+            fieldPath to clear overrides from
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1261,10 +1261,10 @@ class AsyncRawEntitiesClient:
         Returns
         -------
         AsyncHttpResponse[Entity]
-            The removal of entity override was successful.
+            Removal of entity override was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
+            f"entities/{jsonable_encoder(entity_id)}/override/{jsonable_encoder(field_path)}",
             method="DELETE",
             request_options=request_options,
         )
@@ -1324,7 +1324,7 @@ class AsyncRawEntitiesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[EntityEventResponse]:
         """
-        This is a long polling API that will first return all pre-existing data and then return all new data as
+        This is a long polling API that will first return all preexisting data and then return all new data as
         it becomes available. If you want to start a new polling session then open a request with an empty
         'sessionToken' in the request body. The server will return a new session token in the response.
         If you want to retrieve the next batch of results from an existing polling session then send the session
@@ -1351,7 +1351,7 @@ class AsyncRawEntitiesClient:
             Entity event batch retrieval was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/entities/events",
+            "entities/events",
             method="POST",
             json={
                 "sessionToken": session_token,

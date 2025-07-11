@@ -1,6 +1,6 @@
 # Reference
-## Entities
-<details><summary><code>client.entities.<a href="src/anduril/entities/client.py">publish_entity</a>(...)</code></summary>
+## entity
+<details><summary><code>client.entity.<a href="src/anduril/entity/client.py">publish_entity_rest</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -38,7 +38,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.publish_entity()
+client.entity.publish_entity_rest()
 
 ```
 </dd>
@@ -383,7 +383,7 @@ Describes an entity's security classification levels at an overall classificatio
 </dl>
 </details>
 
-<details><summary><code>client.entities.<a href="src/anduril/entities/client.py">get_entity</a>(...)</code></summary>
+<details><summary><code>client.entity.<a href="src/anduril/entity/client.py">get_entity_by_id</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -401,7 +401,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.get_entity(
+client.entity.get_entity_by_id(
     entity_id="entityId",
 )
 
@@ -439,7 +439,7 @@ client.entities.get_entity(
 </dl>
 </details>
 
-<details><summary><code>client.entities.<a href="src/anduril/entities/client.py">override_entity</a>(...)</code></summary>
+<details><summary><code>client.entity.<a href="src/anduril/entity/client.py">put_entity_override_rest</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -477,7 +477,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.override_entity(
+client.entity.put_entity_override_rest(
     entity_id="entityId",
     field_path="mil_view.disposition",
 )
@@ -496,7 +496,7 @@ client.entities.override_entity(
 <dl>
 <dd>
 
-**entity_id:** `str` — The unique ID of the entity to override
+**entity_id:** `str` — ID of the entity to override
     
 </dd>
 </dl>
@@ -543,7 +543,7 @@ the object and ignore all other fields.
 </dl>
 </details>
 
-<details><summary><code>client.entities.<a href="src/anduril/entities/client.py">remove_entity_override</a>(...)</code></summary>
+<details><summary><code>client.entity.<a href="src/anduril/entity/client.py">remove_entity_override_rest</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -575,7 +575,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.remove_entity_override(
+client.entity.remove_entity_override_rest(
     entity_id="entityId",
     field_path="mil_view.disposition",
 )
@@ -594,7 +594,7 @@ client.entities.remove_entity_override(
 <dl>
 <dd>
 
-**entity_id:** `str` — The unique ID of the entity to undo an override from.
+**entity_id:** `str` — ID of the entity to undo an override from
     
 </dd>
 </dl>
@@ -602,7 +602,7 @@ client.entities.remove_entity_override(
 <dl>
 <dd>
 
-**field_path:** `str` — The fieldPath to clear overrides from.
+**field_path:** `str` — fieldPath to clear overrides from
     
 </dd>
 </dl>
@@ -622,7 +622,7 @@ client.entities.remove_entity_override(
 </dl>
 </details>
 
-<details><summary><code>client.entities.<a href="src/anduril/entities/client.py">long_poll_entity_events</a>(...)</code></summary>
+<details><summary><code>client.entity.<a href="src/anduril/entity/client.py">long_poll_entity_events</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -634,7 +634,7 @@ client.entities.remove_entity_override(
 <dl>
 <dd>
 
-This is a long polling API that will first return all pre-existing data and then return all new data as
+This is a long polling API that will first return all preexisting data and then return all new data as
 it becomes available. If you want to start a new polling session then open a request with an empty
 'sessionToken' in the request body. The server will return a new session token in the response.
 If you want to retrieve the next batch of results from an existing polling session then send the session
@@ -662,7 +662,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.long_poll_entity_events(
+client.entity.long_poll_entity_events(
     session_token="sessionToken",
 )
 
@@ -708,8 +708,8 @@ client.entities.long_poll_entity_events(
 </dl>
 </details>
 
-## Tasking
-<details><summary><code>client.tasking.<a href="src/anduril/tasking/client.py">create_task</a>(...)</code></summary>
+## task
+<details><summary><code>client.task.<a href="src/anduril/task/client.py">create_task</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -742,7 +742,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.tasking.create_task()
+client.task.create_task()
 
 ```
 </dd>
@@ -847,7 +847,7 @@ task. For example, an entity Objective, an entity Keep In Zone, etc.
 </dl>
 </details>
 
-<details><summary><code>client.tasking.<a href="src/anduril/tasking/client.py">get_task</a>(...)</code></summary>
+<details><summary><code>client.task.<a href="src/anduril/task/client.py">get_task_by_id</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -865,7 +865,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.tasking.get_task(
+client.task.get_task_by_id(
     task_id="taskId",
 )
 
@@ -903,23 +903,9 @@ client.tasking.get_task(
 </dl>
 </details>
 
-<details><summary><code>client.tasking.<a href="src/anduril/tasking/client.py">update_task_status</a>(...)</code></summary>
+<details><summary><code>client.task.<a href="src/anduril/task/client.py">update_task_status_by_id</a>(...)</code></summary>
 <dl>
 <dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Update the status of a task.
-</dd>
-</dl>
-</dd>
-</dl>
 
 #### 🔌 Usage
 
@@ -935,7 +921,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.tasking.update_task_status(
+client.task.update_task_status_by_id(
     task_id="taskId",
 )
 
@@ -1002,23 +988,9 @@ is known are considered stale and ignored.
 </dl>
 </details>
 
-<details><summary><code>client.tasking.<a href="src/anduril/tasking/client.py">query_tasks</a>(...)</code></summary>
+<details><summary><code>client.task.<a href="src/anduril/task/client.py">query_tasks</a>(...)</code></summary>
 <dl>
 <dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Query for tasks by a specified search criteria.
-</dd>
-</dl>
-</dd>
-</dl>
 
 #### 🔌 Usage
 
@@ -1034,7 +1006,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.tasking.query_tasks()
+client.task.query_tasks()
 
 ```
 </dd>
@@ -1098,7 +1070,7 @@ any of the remaining parameters, but not both.
 </dl>
 </details>
 
-<details><summary><code>client.tasking.<a href="src/anduril/tasking/client.py">listen_as_agent</a>(...)</code></summary>
+<details><summary><code>client.task.<a href="src/anduril/task/client.py">long_poll_listen_as_agent</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -1132,7 +1104,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.tasking.listen_as_agent()
+client.task.long_poll_listen_as_agent()
 
 ```
 </dd>
@@ -1169,7 +1141,7 @@ client.tasking.listen_as_agent()
 </details>
 
 ## Objects
-<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">list_objects</a>(...)</code></summary>
+<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">lists_objects_in_your_environment</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -1181,7 +1153,7 @@ client.tasking.listen_as_agent()
 <dl>
 <dd>
 
-Lists objects in your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects. By default this endpoint will list local objects only.
+Lists objects stored across your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects.
 </dd>
 </dl>
 </dd>
@@ -1201,7 +1173,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-response = client.objects.list_objects()
+response = client.objects.lists_objects_in_your_environment()
 for item in response:
     yield item
 # alternatively, you can paginate page-by-page
@@ -1246,14 +1218,6 @@ for page in response.iter_pages():
 <dl>
 <dd>
 
-**all_objects_in_mesh:** `typing.Optional[ListObjectsRequestAllObjectsInMesh]` — Lists objects across all environment nodes in a Lattice Mesh.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -1266,7 +1230,7 @@ for page in response.iter_pages():
 </dl>
 </details>
 
-<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">delete_object</a>(...)</code></summary>
+<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">delete_an_object</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -1278,7 +1242,7 @@ for page in response.iter_pages():
 <dl>
 <dd>
 
-Deletes an object from your environment given the objectPath path parameter.
+Deletes an object on this node.
 </dd>
 </dl>
 </dd>
@@ -1298,7 +1262,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.objects.delete_object(
+client.objects.delete_an_object(
     object_path="objectPath",
 )
 
@@ -1316,7 +1280,7 @@ client.objects.delete_object(
 <dl>
 <dd>
 
-**object_path:** `str` — The path of the object to delete.
+**object_path:** `str` — The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
     
 </dd>
 </dl>
@@ -1336,7 +1300,7 @@ client.objects.delete_object(
 </dl>
 </details>
 
-<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">get_object_metadata</a>(...)</code></summary>
+<details><summary><code>client.objects.<a href="src/anduril/objects/client.py">fetches_metadata_for_a_specified_object_path</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -1368,7 +1332,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.objects.get_object_metadata(
+client.objects.fetches_metadata_for_a_specified_object_path(
     object_path="objectPath",
 )
 
@@ -1386,7 +1350,7 @@ client.objects.get_object_metadata(
 <dl>
 <dd>
 
-**object_path:** `str` — The path of the object to query.
+**object_path:** `str` — The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
     
 </dd>
 </dl>

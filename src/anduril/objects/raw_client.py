@@ -22,7 +22,6 @@ from ..errors.unauthorized_error import UnauthorizedError
 from ..types.list_response import ListResponse
 from ..types.path_metadata import PathMetadata
 from .types.get_object_request_accept_encoding import GetObjectRequestAcceptEncoding
-from .types.list_objects_request_all_objects_in_mesh import ListObjectsRequestAllObjectsInMesh
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -32,17 +31,16 @@ class RawObjectsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def list_objects(
+    def lists_objects_in_your_environment(
         self,
         *,
         prefix: typing.Optional[str] = None,
         since_timestamp: typing.Optional[dt.datetime] = None,
         page_token: typing.Optional[str] = None,
-        all_objects_in_mesh: typing.Optional[ListObjectsRequestAllObjectsInMesh] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SyncPager[PathMetadata]:
         """
-        Lists objects in your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects. By default this endpoint will list local objects only.
+        Lists objects stored across your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects.
 
         Parameters
         ----------
@@ -55,9 +53,6 @@ class RawObjectsClient:
         page_token : typing.Optional[str]
             Base64 and URL-encoded cursor returned by the service to continue paging.
 
-        all_objects_in_mesh : typing.Optional[ListObjectsRequestAllObjectsInMesh]
-            Lists objects across all environment nodes in a Lattice Mesh.
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -67,13 +62,12 @@ class RawObjectsClient:
             Successful operation
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/objects",
+            "objects",
             method="GET",
             params={
                 "prefix": prefix,
                 "sinceTimestamp": serialize_datetime(since_timestamp) if since_timestamp is not None else None,
                 "pageToken": page_token,
-                "allObjectsInMesh": all_objects_in_mesh,
             },
             request_options=request_options,
         )
@@ -89,11 +83,10 @@ class RawObjectsClient:
                 _items = _parsed_response.path_metadatas
                 _parsed_next = _parsed_response.next_page_token
                 _has_next = _parsed_next is not None and _parsed_next != ""
-                _get_next = lambda: self.list_objects(
+                _get_next = lambda: self.lists_objects_in_your_environment(
                     prefix=prefix,
                     since_timestamp=since_timestamp,
                     page_token=_parsed_next,
-                    all_objects_in_mesh=all_objects_in_mesh,
                     request_options=request_options,
                 )
                 return SyncPager(
@@ -146,12 +139,12 @@ class RawObjectsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.Iterator[HttpResponse[typing.Iterator[bytes]]]:
         """
-        Fetches an object from your environment using the objectPath path parameter.
+        Fetches an object from your environment.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to fetch.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         accept_encoding : typing.Optional[GetObjectRequestAcceptEncoding]
             If set, Lattice will compress the response using the specified compression method. If the header is not defined, or the compression method is set to `identity`, no compression will be applied to the response.
@@ -165,7 +158,7 @@ class RawObjectsClient:
             Successful operation
         """
         with self._client_wrapper.httpx_client.stream(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="GET",
             headers={
                 "Accept-Encoding": str(accept_encoding) if accept_encoding is not None else None,
@@ -247,7 +240,7 @@ class RawObjectsClient:
         Parameters
         ----------
         object_path : str
-            Path of the Object that is to be uploaded.
+            Path of the Object that is to be uploaded. Object paths must match the regex `^[a-zA-Z0-9/_\-.]*$`
 
         request : typing.Union[bytes, typing.Iterator[bytes], typing.AsyncIterator[bytes]]
 
@@ -260,7 +253,7 @@ class RawObjectsClient:
             Successful upload
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="POST",
             content=request,
             headers={
@@ -339,16 +332,16 @@ class RawObjectsClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def delete_object(
+    def delete_an_object(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[None]:
         """
-        Deletes an object from your environment given the objectPath path parameter.
+        Deletes an object on this node.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to delete.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -358,7 +351,7 @@ class RawObjectsClient:
         HttpResponse[None]
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="DELETE",
             request_options=request_options,
         )
@@ -414,7 +407,7 @@ class RawObjectsClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def get_object_metadata(
+    def fetches_metadata_for_a_specified_object_path(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[None]:
         """
@@ -423,7 +416,7 @@ class RawObjectsClient:
         Parameters
         ----------
         object_path : str
-            The path of the object to query.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -433,7 +426,7 @@ class RawObjectsClient:
         HttpResponse[None]
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="HEAD",
             request_options=request_options,
         )
@@ -483,17 +476,16 @@ class AsyncRawObjectsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def list_objects(
+    async def lists_objects_in_your_environment(
         self,
         *,
         prefix: typing.Optional[str] = None,
         since_timestamp: typing.Optional[dt.datetime] = None,
         page_token: typing.Optional[str] = None,
-        all_objects_in_mesh: typing.Optional[ListObjectsRequestAllObjectsInMesh] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncPager[PathMetadata]:
         """
-        Lists objects in your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects. By default this endpoint will list local objects only.
+        Lists objects stored across your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects.
 
         Parameters
         ----------
@@ -506,9 +498,6 @@ class AsyncRawObjectsClient:
         page_token : typing.Optional[str]
             Base64 and URL-encoded cursor returned by the service to continue paging.
 
-        all_objects_in_mesh : typing.Optional[ListObjectsRequestAllObjectsInMesh]
-            Lists objects across all environment nodes in a Lattice Mesh.
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -518,13 +507,12 @@ class AsyncRawObjectsClient:
             Successful operation
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/objects",
+            "objects",
             method="GET",
             params={
                 "prefix": prefix,
                 "sinceTimestamp": serialize_datetime(since_timestamp) if since_timestamp is not None else None,
                 "pageToken": page_token,
-                "allObjectsInMesh": all_objects_in_mesh,
             },
             request_options=request_options,
         )
@@ -542,11 +530,10 @@ class AsyncRawObjectsClient:
                 _has_next = _parsed_next is not None and _parsed_next != ""
 
                 async def _get_next():
-                    return await self.list_objects(
+                    return await self.lists_objects_in_your_environment(
                         prefix=prefix,
                         since_timestamp=since_timestamp,
                         page_token=_parsed_next,
-                        all_objects_in_mesh=all_objects_in_mesh,
                         request_options=request_options,
                     )
 
@@ -600,12 +587,12 @@ class AsyncRawObjectsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.AsyncIterator[AsyncHttpResponse[typing.AsyncIterator[bytes]]]:
         """
-        Fetches an object from your environment using the objectPath path parameter.
+        Fetches an object from your environment.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to fetch.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         accept_encoding : typing.Optional[GetObjectRequestAcceptEncoding]
             If set, Lattice will compress the response using the specified compression method. If the header is not defined, or the compression method is set to `identity`, no compression will be applied to the response.
@@ -619,7 +606,7 @@ class AsyncRawObjectsClient:
             Successful operation
         """
         async with self._client_wrapper.httpx_client.stream(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="GET",
             headers={
                 "Accept-Encoding": str(accept_encoding) if accept_encoding is not None else None,
@@ -702,7 +689,7 @@ class AsyncRawObjectsClient:
         Parameters
         ----------
         object_path : str
-            Path of the Object that is to be uploaded.
+            Path of the Object that is to be uploaded. Object paths must match the regex `^[a-zA-Z0-9/_\-.]*$`
 
         request : typing.Union[bytes, typing.Iterator[bytes], typing.AsyncIterator[bytes]]
 
@@ -715,7 +702,7 @@ class AsyncRawObjectsClient:
             Successful upload
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="POST",
             content=request,
             headers={
@@ -794,16 +781,16 @@ class AsyncRawObjectsClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def delete_object(
+    async def delete_an_object(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[None]:
         """
-        Deletes an object from your environment given the objectPath path parameter.
+        Deletes an object on this node.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to delete.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -813,7 +800,7 @@ class AsyncRawObjectsClient:
         AsyncHttpResponse[None]
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="DELETE",
             request_options=request_options,
         )
@@ -869,7 +856,7 @@ class AsyncRawObjectsClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def get_object_metadata(
+    async def fetches_metadata_for_a_specified_object_path(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[None]:
         """
@@ -878,7 +865,7 @@ class AsyncRawObjectsClient:
         Parameters
         ----------
         object_path : str
-            The path of the object to query.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -888,7 +875,7 @@ class AsyncRawObjectsClient:
         AsyncHttpResponse[None]
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/objects/{jsonable_encoder(object_path)}",
+            f"objects/{jsonable_encoder(object_path)}",
             method="HEAD",
             request_options=request_options,
         )

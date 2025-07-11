@@ -1,19 +1,19 @@
 # Anduril Python Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Anduril%2FPython)
-[![pypi](https://img.shields.io/pypi/v/anduril)](https://pypi.python.org/pypi/anduril)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fvpuri-anduril%2Flattice-sdk-python)
+[![pypi](https://img.shields.io/pypi/v/anduril-lattice-sdk-test)](https://pypi.python.org/pypi/anduril-lattice-sdk-test)
 
 The Anduril Python library provides convenient access to the Anduril API from Python.
 
 ## Installation
 
 ```sh
-pip install anduril
+pip install anduril-lattice-sdk-test
 ```
 
 ## Reference
 
-A full reference for this library is available [here](./reference.md).
+A full reference for this library is available [here](https://github.com/vpuri-anduril/lattice-sdk-python/blob/HEAD/./reference.md).
 
 ## Usage
 
@@ -25,7 +25,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-client.entities.long_poll_entity_events(
+client.entity.long_poll_entity_events(
     session_token="sessionToken",
 )
 ```
@@ -45,7 +45,7 @@ client = Asynclattice(
 
 
 async def main() -> None:
-    await client.entities.long_poll_entity_events(
+    await client.entity.long_poll_entity_events(
         session_token="sessionToken",
     )
 
@@ -62,7 +62,7 @@ will be thrown.
 from anduril.core.api_error import ApiError
 
 try:
-    client.entities.long_poll_entity_events(...)
+    client.entity.long_poll_entity_events(...)
 except ApiError as e:
     print(e.status_code)
     print(e.body)
@@ -78,7 +78,7 @@ from anduril import lattice
 client = lattice(
     token="YOUR_TOKEN",
 )
-response = client.objects.list_objects()
+response = client.objects.lists_objects_in_your_environment()
 for item in response:
     yield item
 # alternatively, you can paginate page-by-page
@@ -99,10 +99,10 @@ from anduril import lattice
 client = lattice(
     ...,
 )
-response = client.entities.with_raw_response.long_poll_entity_events(...)
+response = client.entity.with_raw_response.long_poll_entity_events(...)
 print(response.headers)  # access the response headers
 print(response.data)  # access the underlying object
-pager = client.objects.list_objects(...)
+pager = client.objects.lists_objects_in_your_environment(...)
 print(pager.response.headers)  # access the response headers for the first page
 for item in pager:
     print(item)  # access the underlying object(s)
@@ -127,7 +127,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `max_retries` request option to configure this behavior.
 
 ```python
-client.entities.long_poll_entity_events(..., request_options={
+client.entity.long_poll_entity_events(..., request_options={
     "max_retries": 1
 })
 ```
@@ -147,7 +147,7 @@ client = lattice(
 
 
 # Override timeout for a specific method
-client.entities.long_poll_entity_events(..., request_options={
+client.entity.long_poll_entity_events(..., request_options={
     "timeout_in_seconds": 1
 })
 ```

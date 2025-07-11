@@ -3,5 +3,8 @@
 # isort: skip_file
 
 from .error import Error
+from .task_query_status_filter import TaskQueryStatusFilter
+from .task_query_status_filter_status import TaskQueryStatusFilterStatus
+from .task_query_update_time_range import TaskQueryUpdateTimeRange
 
-__all__ = ["Error"]
+__all__ = ["Error", "TaskQueryStatusFilter", "TaskQueryStatusFilterStatus", "TaskQueryUpdateTimeRange"]

@@ -38,28 +38,28 @@ from ..types.task_catalog import TaskCatalog
 from ..types.tracked import Tracked
 from ..types.transponder_codes import TransponderCodes
 from ..types.visual_details import VisualDetails
-from .raw_client import AsyncRawEntitiesClient, RawEntitiesClient
+from .raw_client import AsyncRawEntityClient, RawEntityClient
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
 
-class EntitiesClient:
+class EntityClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
-        self._raw_client = RawEntitiesClient(client_wrapper=client_wrapper)
+        self._raw_client = RawEntityClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> RawEntitiesClient:
+    def with_raw_response(self) -> RawEntityClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        RawEntitiesClient
+        RawEntityClient
         """
         return self._raw_client
 
-    def publish_entity(
+    def publish_entity_rest(
         self,
         *,
         entity_id: typing.Optional[str] = OMIT,
@@ -249,9 +249,9 @@ class EntitiesClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.entities.publish_entity()
+        client.entity.publish_entity_rest()
         """
-        _response = self._raw_client.publish_entity(
+        _response = self._raw_client.publish_entity_rest(
             entity_id=entity_id,
             description=description,
             is_live=is_live,
@@ -292,7 +292,7 @@ class EntitiesClient:
         )
         return _response.data
 
-    def get_entity(self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Entity:
+    def get_entity_by_id(self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Entity:
         """
         Parameters
         ----------
@@ -314,14 +314,14 @@ class EntitiesClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.entities.get_entity(
+        client.entity.get_entity_by_id(
             entity_id="entityId",
         )
         """
-        _response = self._raw_client.get_entity(entity_id, request_options=request_options)
+        _response = self._raw_client.get_entity_by_id(entity_id, request_options=request_options)
         return _response.data
 
-    def override_entity(
+    def put_entity_override_rest(
         self,
         entity_id: str,
         field_path: str,
@@ -342,7 +342,7 @@ class EntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to override
+            ID of the entity to override
 
         field_path : str
             fieldPath to override
@@ -369,17 +369,17 @@ class EntitiesClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.entities.override_entity(
+        client.entity.put_entity_override_rest(
             entity_id="entityId",
             field_path="mil_view.disposition",
         )
         """
-        _response = self._raw_client.override_entity(
+        _response = self._raw_client.put_entity_override_rest(
             entity_id, field_path, entity=entity, provenance=provenance, request_options=request_options
         )
         return _response.data
 
-    def remove_entity_override(
+    def remove_entity_override_rest(
         self, entity_id: str, field_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> Entity:
         """
@@ -388,10 +388,10 @@ class EntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to undo an override from.
+            ID of the entity to undo an override from
 
         field_path : str
-            The fieldPath to clear overrides from.
+            fieldPath to clear overrides from
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -399,7 +399,7 @@ class EntitiesClient:
         Returns
         -------
         Entity
-            The removal of entity override was successful.
+            Removal of entity override was successful
 
         Examples
         --------
@@ -408,12 +408,12 @@ class EntitiesClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.entities.remove_entity_override(
+        client.entity.remove_entity_override_rest(
             entity_id="entityId",
             field_path="mil_view.disposition",
         )
         """
-        _response = self._raw_client.remove_entity_override(entity_id, field_path, request_options=request_options)
+        _response = self._raw_client.remove_entity_override_rest(entity_id, field_path, request_options=request_options)
         return _response.data
 
     def long_poll_entity_events(
@@ -424,7 +424,7 @@ class EntitiesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> EntityEventResponse:
         """
-        This is a long polling API that will first return all pre-existing data and then return all new data as
+        This is a long polling API that will first return all preexisting data and then return all new data as
         it becomes available. If you want to start a new polling session then open a request with an empty
         'sessionToken' in the request body. The server will return a new session token in the response.
         If you want to retrieve the next batch of results from an existing polling session then send the session
@@ -457,7 +457,7 @@ class EntitiesClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.entities.long_poll_entity_events(
+        client.entity.long_poll_entity_events(
             session_token="sessionToken",
         )
         """
@@ -467,22 +467,22 @@ class EntitiesClient:
         return _response.data
 
 
-class AsyncEntitiesClient:
+class AsyncEntityClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawEntitiesClient(client_wrapper=client_wrapper)
+        self._raw_client = AsyncRawEntityClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> AsyncRawEntitiesClient:
+    def with_raw_response(self) -> AsyncRawEntityClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        AsyncRawEntitiesClient
+        AsyncRawEntityClient
         """
         return self._raw_client
 
-    async def publish_entity(
+    async def publish_entity_rest(
         self,
         *,
         entity_id: typing.Optional[str] = OMIT,
@@ -677,12 +677,12 @@ class AsyncEntitiesClient:
 
 
         async def main() -> None:
-            await client.entities.publish_entity()
+            await client.entity.publish_entity_rest()
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.publish_entity(
+        _response = await self._raw_client.publish_entity_rest(
             entity_id=entity_id,
             description=description,
             is_live=is_live,
@@ -723,7 +723,9 @@ class AsyncEntitiesClient:
         )
         return _response.data
 
-    async def get_entity(self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Entity:
+    async def get_entity_by_id(
+        self, entity_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> Entity:
         """
         Parameters
         ----------
@@ -750,17 +752,17 @@ class AsyncEntitiesClient:
 
 
         async def main() -> None:
-            await client.entities.get_entity(
+            await client.entity.get_entity_by_id(
                 entity_id="entityId",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_entity(entity_id, request_options=request_options)
+        _response = await self._raw_client.get_entity_by_id(entity_id, request_options=request_options)
         return _response.data
 
-    async def override_entity(
+    async def put_entity_override_rest(
         self,
         entity_id: str,
         field_path: str,
@@ -781,7 +783,7 @@ class AsyncEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to override
+            ID of the entity to override
 
         field_path : str
             fieldPath to override
@@ -813,7 +815,7 @@ class AsyncEntitiesClient:
 
 
         async def main() -> None:
-            await client.entities.override_entity(
+            await client.entity.put_entity_override_rest(
                 entity_id="entityId",
                 field_path="mil_view.disposition",
             )
@@ -821,12 +823,12 @@ class AsyncEntitiesClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.override_entity(
+        _response = await self._raw_client.put_entity_override_rest(
             entity_id, field_path, entity=entity, provenance=provenance, request_options=request_options
         )
         return _response.data
 
-    async def remove_entity_override(
+    async def remove_entity_override_rest(
         self, entity_id: str, field_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> Entity:
         """
@@ -835,10 +837,10 @@ class AsyncEntitiesClient:
         Parameters
         ----------
         entity_id : str
-            The unique ID of the entity to undo an override from.
+            ID of the entity to undo an override from
 
         field_path : str
-            The fieldPath to clear overrides from.
+            fieldPath to clear overrides from
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -846,7 +848,7 @@ class AsyncEntitiesClient:
         Returns
         -------
         Entity
-            The removal of entity override was successful.
+            Removal of entity override was successful
 
         Examples
         --------
@@ -860,7 +862,7 @@ class AsyncEntitiesClient:
 
 
         async def main() -> None:
-            await client.entities.remove_entity_override(
+            await client.entity.remove_entity_override_rest(
                 entity_id="entityId",
                 field_path="mil_view.disposition",
             )
@@ -868,7 +870,7 @@ class AsyncEntitiesClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.remove_entity_override(
+        _response = await self._raw_client.remove_entity_override_rest(
             entity_id, field_path, request_options=request_options
         )
         return _response.data
@@ -881,7 +883,7 @@ class AsyncEntitiesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> EntityEventResponse:
         """
-        This is a long polling API that will first return all pre-existing data and then return all new data as
+        This is a long polling API that will first return all preexisting data and then return all new data as
         it becomes available. If you want to start a new polling session then open a request with an empty
         'sessionToken' in the request body. The server will return a new session token in the response.
         If you want to retrieve the next batch of results from an existing polling session then send the session
@@ -919,7 +921,7 @@ class AsyncEntitiesClient:
 
 
         async def main() -> None:
-            await client.entities.long_poll_entity_events(
+            await client.entity.long_poll_entity_events(
                 session_token="sessionToken",
             )
 

@@ -29,7 +29,7 @@ from .types.task_query_update_time_range import TaskQueryUpdateTimeRange
 OMIT = typing.cast(typing.Any, ...)
 
 
-class RawTaskingClient:
+class RawTaskClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
@@ -89,7 +89,7 @@ class RawTaskingClient:
             Task creation was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/tasks",
+            "tasks",
             method="POST",
             json={
                 "taskId": task_id,
@@ -152,7 +152,9 @@ class RawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def get_task(self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[Task]:
+    def get_task_by_id(
+        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[Task]:
         """
         Parameters
         ----------
@@ -168,7 +170,7 @@ class RawTaskingClient:
             Task retrieval was successful.
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/tasks/{jsonable_encoder(task_id)}",
+            f"tasks/{jsonable_encoder(task_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -220,7 +222,7 @@ class RawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def update_task_status(
+    def update_task_status_by_id(
         self,
         task_id: str,
         *,
@@ -230,8 +232,6 @@ class RawTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[Task]:
         """
-        Update the status of a task.
-
         Parameters
         ----------
         task_id : str
@@ -257,7 +257,7 @@ class RawTaskingClient:
             Task status update was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/v1/tasks/{jsonable_encoder(task_id)}/status",
+            f"tasks/{jsonable_encoder(task_id)}/status",
             method="PUT",
             json={
                 "statusVersion": status_version,
@@ -332,8 +332,6 @@ class RawTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TaskQueryResults]:
         """
-        Query for tasks by a specified search criteria.
-
         Parameters
         ----------
         page_token : typing.Optional[str]
@@ -358,7 +356,7 @@ class RawTaskingClient:
             Task query was successful
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/tasks/query",
+            "tasks/query",
             method="POST",
             json={
                 "pageToken": page_token,
@@ -424,7 +422,7 @@ class RawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def listen_as_agent(
+    def long_poll_listen_as_agent(
         self,
         *,
         agent_selector: typing.Optional[EntityIdsSelector] = OMIT,
@@ -449,7 +447,7 @@ class RawTaskingClient:
             Requests for the agent to comply with.
         """
         _response = self._client_wrapper.httpx_client.request(
-            "api/v1/agent/listen",
+            "agent/listen",
             method="POST",
             json={
                 "agentSelector": convert_and_respect_annotation_metadata(
@@ -500,7 +498,7 @@ class RawTaskingClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
 
-class AsyncRawTaskingClient:
+class AsyncRawTaskClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
@@ -560,7 +558,7 @@ class AsyncRawTaskingClient:
             Task creation was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/tasks",
+            "tasks",
             method="POST",
             json={
                 "taskId": task_id,
@@ -623,7 +621,7 @@ class AsyncRawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def get_task(
+    async def get_task_by_id(
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[Task]:
         """
@@ -641,7 +639,7 @@ class AsyncRawTaskingClient:
             Task retrieval was successful.
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/tasks/{jsonable_encoder(task_id)}",
+            f"tasks/{jsonable_encoder(task_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -693,7 +691,7 @@ class AsyncRawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def update_task_status(
+    async def update_task_status_by_id(
         self,
         task_id: str,
         *,
@@ -703,8 +701,6 @@ class AsyncRawTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[Task]:
         """
-        Update the status of a task.
-
         Parameters
         ----------
         task_id : str
@@ -730,7 +726,7 @@ class AsyncRawTaskingClient:
             Task status update was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"api/v1/tasks/{jsonable_encoder(task_id)}/status",
+            f"tasks/{jsonable_encoder(task_id)}/status",
             method="PUT",
             json={
                 "statusVersion": status_version,
@@ -805,8 +801,6 @@ class AsyncRawTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TaskQueryResults]:
         """
-        Query for tasks by a specified search criteria.
-
         Parameters
         ----------
         page_token : typing.Optional[str]
@@ -831,7 +825,7 @@ class AsyncRawTaskingClient:
             Task query was successful
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/tasks/query",
+            "tasks/query",
             method="POST",
             json={
                 "pageToken": page_token,
@@ -897,7 +891,7 @@ class AsyncRawTaskingClient:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def listen_as_agent(
+    async def long_poll_listen_as_agent(
         self,
         *,
         agent_selector: typing.Optional[EntityIdsSelector] = OMIT,
@@ -922,7 +916,7 @@ class AsyncRawTaskingClient:
             Requests for the agent to comply with.
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "api/v1/agent/listen",
+            "agent/listen",
             method="POST",
             json={
                 "agentSelector": convert_and_respect_annotation_metadata(

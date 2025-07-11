@@ -2,6 +2,6 @@
 
 # isort: skip_file
 
-from .types import GetObjectRequestAcceptEncoding, ListObjectsRequestAllObjectsInMesh
+from .types import GetObjectRequestAcceptEncoding
 
-__all__ = ["GetObjectRequestAcceptEncoding", "ListObjectsRequestAllObjectsInMesh"]
+__all__ = ["GetObjectRequestAcceptEncoding"]

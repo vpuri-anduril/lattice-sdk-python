@@ -4,10 +4,10 @@ import typing
 
 import httpx
 from .core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
-from .entities.client import AsyncEntitiesClient, EntitiesClient
+from .entity.client import AsyncEntityClient, EntityClient
 from .environment import latticeEnvironment
 from .objects.client import AsyncObjectsClient, ObjectsClient
-from .tasking.client import AsyncTaskingClient, TaskingClient
+from .task.client import AsyncTaskClient, TaskClient
 
 
 class lattice:
@@ -75,8 +75,8 @@ class lattice:
             else httpx.Client(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self.entities = EntitiesClient(client_wrapper=self._client_wrapper)
-        self.tasking = TaskingClient(client_wrapper=self._client_wrapper)
+        self.entity = EntityClient(client_wrapper=self._client_wrapper)
+        self.task = TaskClient(client_wrapper=self._client_wrapper)
         self.objects = ObjectsClient(client_wrapper=self._client_wrapper)
 
 
@@ -145,8 +145,8 @@ class Asynclattice:
             else httpx.AsyncClient(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self.entities = AsyncEntitiesClient(client_wrapper=self._client_wrapper)
-        self.tasking = AsyncTaskingClient(client_wrapper=self._client_wrapper)
+        self.entity = AsyncEntityClient(client_wrapper=self._client_wrapper)
+        self.task = AsyncTaskClient(client_wrapper=self._client_wrapper)
         self.objects = AsyncObjectsClient(client_wrapper=self._client_wrapper)
 
 

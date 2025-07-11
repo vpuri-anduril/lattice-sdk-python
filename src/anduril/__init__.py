@@ -188,11 +188,11 @@ from .errors import (
     TooManyRequestsError,
     UnauthorizedError,
 )
-from . import entities, entity, object, objects, task, tasking
+from . import entity, object, objects, task
 from .client import Asynclattice, lattice
 from .environment import latticeEnvironment
-from .objects import GetObjectRequestAcceptEncoding, ListObjectsRequestAllObjectsInMesh
-from .tasking import TaskQueryStatusFilter, TaskQueryStatusFilterStatus, TaskQueryUpdateTimeRange
+from .objects import GetObjectRequestAcceptEncoding
+from .task import TaskQueryStatusFilter, TaskQueryStatusFilterStatus, TaskQueryUpdateTimeRange
 from .version import __version__
 
 __all__ = [
@@ -279,7 +279,6 @@ __all__ = [
     "InternalServerError",
     "LineOfBearing",
     "LinearRing",
-    "ListObjectsRequestAllObjectsInMesh",
     "ListResponse",
     "Lla",
     "LlaAltitudeReference",
@@ -385,12 +384,10 @@ __all__ = [
     "User",
     "VisualDetails",
     "__version__",
-    "entities",
     "entity",
     "lattice",
     "latticeEnvironment",
     "object",
     "objects",
     "task",
-    "tasking",
 ]
