@@ -2,6 +2,6 @@
 
 # isort: skip_file
 
-from .types import Error
+from .types import Error, TaskQueryStatusFilter, TaskQueryStatusFilterStatus, TaskQueryUpdateTimeRange
 
-__all__ = ["Error"]
+__all__ = ["Error", "TaskQueryStatusFilter", "TaskQueryStatusFilterStatus", "TaskQueryUpdateTimeRange"]

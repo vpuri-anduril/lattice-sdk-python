@@ -4,4 +4,4 @@ import enum
 
 
 class latticeEnvironment(enum.Enum):
-    DEFAULT = "https://example.developer.anduril.com"
+    DEFAULT = "developer.anduril.com/api/v1"

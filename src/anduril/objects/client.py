@@ -9,7 +9,6 @@ from ..core.request_options import RequestOptions
 from ..types.path_metadata import PathMetadata
 from .raw_client import AsyncRawObjectsClient, RawObjectsClient
 from .types.get_object_request_accept_encoding import GetObjectRequestAcceptEncoding
-from .types.list_objects_request_all_objects_in_mesh import ListObjectsRequestAllObjectsInMesh
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -30,17 +29,16 @@ class ObjectsClient:
         """
         return self._raw_client
 
-    def list_objects(
+    def lists_objects_in_your_environment(
         self,
         *,
         prefix: typing.Optional[str] = None,
         since_timestamp: typing.Optional[dt.datetime] = None,
         page_token: typing.Optional[str] = None,
-        all_objects_in_mesh: typing.Optional[ListObjectsRequestAllObjectsInMesh] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> SyncPager[PathMetadata]:
         """
-        Lists objects in your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects. By default this endpoint will list local objects only.
+        Lists objects stored across your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects.
 
         Parameters
         ----------
@@ -52,9 +50,6 @@ class ObjectsClient:
 
         page_token : typing.Optional[str]
             Base64 and URL-encoded cursor returned by the service to continue paging.
-
-        all_objects_in_mesh : typing.Optional[ListObjectsRequestAllObjectsInMesh]
-            Lists objects across all environment nodes in a Lattice Mesh.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -71,19 +66,15 @@ class ObjectsClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        response = client.objects.list_objects()
+        response = client.objects.lists_objects_in_your_environment()
         for item in response:
             yield item
         # alternatively, you can paginate page-by-page
         for page in response.iter_pages():
             yield page
         """
-        return self._raw_client.list_objects(
-            prefix=prefix,
-            since_timestamp=since_timestamp,
-            page_token=page_token,
-            all_objects_in_mesh=all_objects_in_mesh,
-            request_options=request_options,
+        return self._raw_client.lists_objects_in_your_environment(
+            prefix=prefix, since_timestamp=since_timestamp, page_token=page_token, request_options=request_options
         )
 
     def get_object(
@@ -94,12 +85,12 @@ class ObjectsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.Iterator[bytes]:
         """
-        Fetches an object from your environment using the objectPath path parameter.
+        Fetches an object from your environment.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to fetch.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         accept_encoding : typing.Optional[GetObjectRequestAcceptEncoding]
             If set, Lattice will compress the response using the specified compression method. If the header is not defined, or the compression method is set to `identity`, no compression will be applied to the response.
@@ -130,7 +121,7 @@ class ObjectsClient:
         Parameters
         ----------
         object_path : str
-            Path of the Object that is to be uploaded.
+            Path of the Object that is to be uploaded. Object paths must match the regex `^[a-zA-Z0-9/_\-.]*$`
 
         request : typing.Union[bytes, typing.Iterator[bytes], typing.AsyncIterator[bytes]]
 
@@ -145,14 +136,14 @@ class ObjectsClient:
         _response = self._raw_client.upload_object(object_path, request=request, request_options=request_options)
         return _response.data
 
-    def delete_object(self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+    def delete_an_object(self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
-        Deletes an object from your environment given the objectPath path parameter.
+        Deletes an object on this node.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to delete.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -168,14 +159,14 @@ class ObjectsClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.objects.delete_object(
+        client.objects.delete_an_object(
             object_path="objectPath",
         )
         """
-        _response = self._raw_client.delete_object(object_path, request_options=request_options)
+        _response = self._raw_client.delete_an_object(object_path, request_options=request_options)
         return _response.data
 
-    def get_object_metadata(
+    def fetches_metadata_for_a_specified_object_path(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.Dict[str, str]:
         """
@@ -184,7 +175,7 @@ class ObjectsClient:
         Parameters
         ----------
         object_path : str
-            The path of the object to query.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -200,11 +191,13 @@ class ObjectsClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.objects.get_object_metadata(
+        client.objects.fetches_metadata_for_a_specified_object_path(
             object_path="objectPath",
         )
         """
-        _response = self._raw_client.get_object_metadata(object_path, request_options=request_options)
+        _response = self._raw_client.fetches_metadata_for_a_specified_object_path(
+            object_path, request_options=request_options
+        )
         return _response.headers
 
 
@@ -223,17 +216,16 @@ class AsyncObjectsClient:
         """
         return self._raw_client
 
-    async def list_objects(
+    async def lists_objects_in_your_environment(
         self,
         *,
         prefix: typing.Optional[str] = None,
         since_timestamp: typing.Optional[dt.datetime] = None,
         page_token: typing.Optional[str] = None,
-        all_objects_in_mesh: typing.Optional[ListObjectsRequestAllObjectsInMesh] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncPager[PathMetadata]:
         """
-        Lists objects in your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects. By default this endpoint will list local objects only.
+        Lists objects stored across your environment. You can define a prefix to list a subset of your objects. If you do not set a prefix, Lattice returns all available objects.
 
         Parameters
         ----------
@@ -245,9 +237,6 @@ class AsyncObjectsClient:
 
         page_token : typing.Optional[str]
             Base64 and URL-encoded cursor returned by the service to continue paging.
-
-        all_objects_in_mesh : typing.Optional[ListObjectsRequestAllObjectsInMesh]
-            Lists objects across all environment nodes in a Lattice Mesh.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -269,7 +258,7 @@ class AsyncObjectsClient:
 
 
         async def main() -> None:
-            response = await client.objects.list_objects()
+            response = await client.objects.lists_objects_in_your_environment()
             async for item in response:
                 yield item
 
@@ -280,12 +269,8 @@ class AsyncObjectsClient:
 
         asyncio.run(main())
         """
-        return await self._raw_client.list_objects(
-            prefix=prefix,
-            since_timestamp=since_timestamp,
-            page_token=page_token,
-            all_objects_in_mesh=all_objects_in_mesh,
-            request_options=request_options,
+        return await self._raw_client.lists_objects_in_your_environment(
+            prefix=prefix, since_timestamp=since_timestamp, page_token=page_token, request_options=request_options
         )
 
     async def get_object(
@@ -296,12 +281,12 @@ class AsyncObjectsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> typing.AsyncIterator[bytes]:
         """
-        Fetches an object from your environment using the objectPath path parameter.
+        Fetches an object from your environment.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to fetch.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         accept_encoding : typing.Optional[GetObjectRequestAcceptEncoding]
             If set, Lattice will compress the response using the specified compression method. If the header is not defined, or the compression method is set to `identity`, no compression will be applied to the response.
@@ -333,7 +318,7 @@ class AsyncObjectsClient:
         Parameters
         ----------
         object_path : str
-            Path of the Object that is to be uploaded.
+            Path of the Object that is to be uploaded. Object paths must match the regex `^[a-zA-Z0-9/_\-.]*$`
 
         request : typing.Union[bytes, typing.Iterator[bytes], typing.AsyncIterator[bytes]]
 
@@ -348,14 +333,16 @@ class AsyncObjectsClient:
         _response = await self._raw_client.upload_object(object_path, request=request, request_options=request_options)
         return _response.data
 
-    async def delete_object(self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+    async def delete_an_object(
+        self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> None:
         """
-        Deletes an object from your environment given the objectPath path parameter.
+        Deletes an object on this node.
 
         Parameters
         ----------
         object_path : str
-            The path of the object to delete.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -376,17 +363,17 @@ class AsyncObjectsClient:
 
 
         async def main() -> None:
-            await client.objects.delete_object(
+            await client.objects.delete_an_object(
                 object_path="objectPath",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.delete_object(object_path, request_options=request_options)
+        _response = await self._raw_client.delete_an_object(object_path, request_options=request_options)
         return _response.data
 
-    async def get_object_metadata(
+    async def fetches_metadata_for_a_specified_object_path(
         self, object_path: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.Dict[str, str]:
         """
@@ -395,7 +382,7 @@ class AsyncObjectsClient:
         Parameters
         ----------
         object_path : str
-            The path of the object to query.
+            The path of the object to fetch. The specified path must match the following regular expression pattern - `^[a-zA-Z0-9/_\-.]*$`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -416,12 +403,14 @@ class AsyncObjectsClient:
 
 
         async def main() -> None:
-            await client.objects.get_object_metadata(
+            await client.objects.fetches_metadata_for_a_specified_object_path(
                 object_path="objectPath",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_object_metadata(object_path, request_options=request_options)
+        _response = await self._raw_client.fetches_metadata_for_a_specified_object_path(
+            object_path, request_options=request_options
+        )
         return _response.headers

@@ -13,7 +13,7 @@ from ..types.task import Task
 from ..types.task_entity import TaskEntity
 from ..types.task_query_results import TaskQueryResults
 from ..types.task_status import TaskStatus
-from .raw_client import AsyncRawTaskingClient, RawTaskingClient
+from .raw_client import AsyncRawTaskClient, RawTaskClient
 from .types.task_query_status_filter import TaskQueryStatusFilter
 from .types.task_query_update_time_range import TaskQueryUpdateTimeRange
 
@@ -21,18 +21,18 @@ from .types.task_query_update_time_range import TaskQueryUpdateTimeRange
 OMIT = typing.cast(typing.Any, ...)
 
 
-class TaskingClient:
+class TaskClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
-        self._raw_client = RawTaskingClient(client_wrapper=client_wrapper)
+        self._raw_client = RawTaskClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> RawTaskingClient:
+    def with_raw_response(self) -> RawTaskClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        RawTaskingClient
+        RawTaskClient
         """
         return self._raw_client
 
@@ -98,7 +98,7 @@ class TaskingClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.tasking.create_task()
+        client.task.create_task()
         """
         _response = self._raw_client.create_task(
             task_id=task_id,
@@ -113,7 +113,7 @@ class TaskingClient:
         )
         return _response.data
 
-    def get_task(self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Task:
+    def get_task_by_id(self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Task:
         """
         Parameters
         ----------
@@ -135,14 +135,14 @@ class TaskingClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.tasking.get_task(
+        client.task.get_task_by_id(
             task_id="taskId",
         )
         """
-        _response = self._raw_client.get_task(task_id, request_options=request_options)
+        _response = self._raw_client.get_task_by_id(task_id, request_options=request_options)
         return _response.data
 
-    def update_task_status(
+    def update_task_status_by_id(
         self,
         task_id: str,
         *,
@@ -152,8 +152,6 @@ class TaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Task:
         """
-        Update the status of a task.
-
         Parameters
         ----------
         task_id : str
@@ -185,11 +183,11 @@ class TaskingClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.tasking.update_task_status(
+        client.task.update_task_status_by_id(
             task_id="taskId",
         )
         """
-        _response = self._raw_client.update_task_status(
+        _response = self._raw_client.update_task_status_by_id(
             task_id,
             status_version=status_version,
             new_status=new_status,
@@ -208,8 +206,6 @@ class TaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TaskQueryResults:
         """
-        Query for tasks by a specified search criteria.
-
         Parameters
         ----------
         page_token : typing.Optional[str]
@@ -240,7 +236,7 @@ class TaskingClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.tasking.query_tasks()
+        client.task.query_tasks()
         """
         _response = self._raw_client.query_tasks(
             page_token=page_token,
@@ -251,7 +247,7 @@ class TaskingClient:
         )
         return _response.data
 
-    def listen_as_agent(
+    def long_poll_listen_as_agent(
         self,
         *,
         agent_selector: typing.Optional[EntityIdsSelector] = OMIT,
@@ -282,24 +278,26 @@ class TaskingClient:
         client = lattice(
             token="YOUR_TOKEN",
         )
-        client.tasking.listen_as_agent()
+        client.task.long_poll_listen_as_agent()
         """
-        _response = self._raw_client.listen_as_agent(agent_selector=agent_selector, request_options=request_options)
+        _response = self._raw_client.long_poll_listen_as_agent(
+            agent_selector=agent_selector, request_options=request_options
+        )
         return _response.data
 
 
-class AsyncTaskingClient:
+class AsyncTaskClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawTaskingClient(client_wrapper=client_wrapper)
+        self._raw_client = AsyncRawTaskClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> AsyncRawTaskingClient:
+    def with_raw_response(self) -> AsyncRawTaskClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        AsyncRawTaskingClient
+        AsyncRawTaskClient
         """
         return self._raw_client
 
@@ -370,7 +368,7 @@ class AsyncTaskingClient:
 
 
         async def main() -> None:
-            await client.tasking.create_task()
+            await client.task.create_task()
 
 
         asyncio.run(main())
@@ -388,7 +386,7 @@ class AsyncTaskingClient:
         )
         return _response.data
 
-    async def get_task(self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Task:
+    async def get_task_by_id(self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> Task:
         """
         Parameters
         ----------
@@ -415,17 +413,17 @@ class AsyncTaskingClient:
 
 
         async def main() -> None:
-            await client.tasking.get_task(
+            await client.task.get_task_by_id(
                 task_id="taskId",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_task(task_id, request_options=request_options)
+        _response = await self._raw_client.get_task_by_id(task_id, request_options=request_options)
         return _response.data
 
-    async def update_task_status(
+    async def update_task_status_by_id(
         self,
         task_id: str,
         *,
@@ -435,8 +433,6 @@ class AsyncTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Task:
         """
-        Update the status of a task.
-
         Parameters
         ----------
         task_id : str
@@ -473,14 +469,14 @@ class AsyncTaskingClient:
 
 
         async def main() -> None:
-            await client.tasking.update_task_status(
+            await client.task.update_task_status_by_id(
                 task_id="taskId",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.update_task_status(
+        _response = await self._raw_client.update_task_status_by_id(
             task_id,
             status_version=status_version,
             new_status=new_status,
@@ -499,8 +495,6 @@ class AsyncTaskingClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TaskQueryResults:
         """
-        Query for tasks by a specified search criteria.
-
         Parameters
         ----------
         page_token : typing.Optional[str]
@@ -536,7 +530,7 @@ class AsyncTaskingClient:
 
 
         async def main() -> None:
-            await client.tasking.query_tasks()
+            await client.task.query_tasks()
 
 
         asyncio.run(main())
@@ -550,7 +544,7 @@ class AsyncTaskingClient:
         )
         return _response.data
 
-    async def listen_as_agent(
+    async def long_poll_listen_as_agent(
         self,
         *,
         agent_selector: typing.Optional[EntityIdsSelector] = OMIT,
@@ -586,12 +580,12 @@ class AsyncTaskingClient:
 
 
         async def main() -> None:
-            await client.tasking.listen_as_agent()
+            await client.task.long_poll_listen_as_agent()
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.listen_as_agent(
+        _response = await self._raw_client.long_poll_listen_as_agent(
             agent_selector=agent_selector, request_options=request_options
         )
         return _response.data

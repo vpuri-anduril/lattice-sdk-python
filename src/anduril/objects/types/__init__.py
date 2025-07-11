@@ -3,6 +3,5 @@
 # isort: skip_file
 
 from .get_object_request_accept_encoding import GetObjectRequestAcceptEncoding
-from .list_objects_request_all_objects_in_mesh import ListObjectsRequestAllObjectsInMesh
 
-__all__ = ["GetObjectRequestAcceptEncoding", "ListObjectsRequestAllObjectsInMesh"]
+__all__ = ["GetObjectRequestAcceptEncoding"]
