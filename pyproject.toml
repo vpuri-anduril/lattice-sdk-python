@@ -1,13 +1,16 @@
 [project]
-name = "anduril"
+name = "<<your-package>>"
 
 [tool.poetry]
-name = "anduril"
-version = "0.0.0"
-description = ""
+name = "<<your-package>>"
+version = "0.0.144"
+description = "HTTP API stubs for the Lattice SDK"
 readme = "README.md"
 authors = []
-keywords = []
+keywords = [
+    "anduril",
+    "lattice"
+]
 
 classifiers = [
     "Intended Audience :: Developers",
@@ -31,6 +34,8 @@ packages = [
 ]
 
 [project.urls]
+Documentation = 'docs.anduril.com'
+Homepage = 'anduril.com'
 Repository = 'https://github.com/vpuri-anduril/lattice-sdk-python'
 
 [tool.poetry.dependencies]
