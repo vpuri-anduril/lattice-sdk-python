@@ -1,3 +1,3 @@
 from importlib import metadata
 
-__version__ = metadata.version("anduril")
+__version__ = metadata.version("<<your-package>>")
