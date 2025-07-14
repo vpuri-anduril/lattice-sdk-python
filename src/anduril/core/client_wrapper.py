@@ -22,9 +22,10 @@ class BaseClientWrapper:
 
     def get_headers(self) -> typing.Dict[str, str]:
         headers: typing.Dict[str, str] = {
+            "User-Agent": "anduril-lattice-sdk/1.8.1",
             "X-Fern-Language": "Python",
-            "X-Fern-SDK-Name": "anduril",
-            "X-Fern-SDK-Version": "0.0.0",
+            "X-Fern-SDK-Name": "anduril-lattice-sdk",
+            "X-Fern-SDK-Version": "1.8.1",
             **(self.get_custom_headers() or {}),
         }
         token = self._get_token()
