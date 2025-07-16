@@ -13,6 +13,10 @@ class PathMetadata(UniversalBaseModel):
     size_bytes: int
     last_updated_at: dt.datetime
     expiry_time: typing.Optional[dt.datetime] = None
+    node_id: str = pydantic.Field()
+    """
+    The unique environment node ID in a Lattice Mesh deployment.
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
