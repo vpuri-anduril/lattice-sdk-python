@@ -1,19 +1,19 @@
 # Anduril Python Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Anduril%2FPython)
-[![pypi](https://img.shields.io/pypi/v/anduril)](https://pypi.python.org/pypi/anduril)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fvpuri-anduril%2Flattice-sdk-python)
+[![pypi](https://img.shields.io/pypi/v/anduril-lattice-sdk-test)](https://pypi.python.org/pypi/anduril-lattice-sdk-test)
 
 The Anduril Python library provides convenient access to the Anduril API from Python.
 
 ## Installation
 
 ```sh
-pip install anduril
+pip install anduril-lattice-sdk-test
 ```
 
 ## Reference
 
-A full reference for this library is available [here](./reference.md).
+A full reference for this library is available [here](https://github.com/vpuri-anduril/lattice-sdk-python/blob/HEAD/./reference.md).
 
 ## Usage
 
